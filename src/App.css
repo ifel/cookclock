@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+}
+
+.Clock {
+    font-size: x-large;
+}
+
+.Clock-header {
+    font-weight: bold;
+    display: inline-block;
+    margin:5px;
+}
+
+.Clock-text {
+    display: inline-block;
+}
+
+.KeepAwake {
+    position: absolute;
+    top: 95%;
+    right: 0;
+}
