@@ -6,7 +6,8 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1",
-    "nosleep.js": "^0.7.0"
+    "nosleep.js": "^0.7.0",
+    "material-ui": "~0.20.0"
   },
   "scripts": {
     "start": "react-scripts start",

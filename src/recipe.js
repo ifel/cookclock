@@ -1,0 +1,256 @@
+import React from 'react';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import {List, ListItem} from 'material-ui/List';
+import Checkbox from 'material-ui/Checkbox';
+import LinearProgress from 'material-ui/LinearProgress';
+import Clock from './clock';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
+import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+
+
+class Recipe extends React.Component {
+    constructor(props) {
+        super(props);
+        this.startCookingHandler = this.startCookingHandler.bind(this);
+        this.finishCookingHandler = this.finishCookingHandler.bind(this);
+        this.data = this.props.data;
+        this.state = {
+            cookingInProgress: false
+        }
+    }
+
+    startCookingHandler(e) {
+        e.preventDefault();
+        this.setState({cookingInProgress: true})
+    }
+
+    finishCookingHandler(e) {
+        e.preventDefault();
+        this.setState({cookingInProgress: false})
+    }
+
+    render() {
+        let appBarStyle = {
+            textAlign: "left"
+        };
+        let appBar = <AppBar
+            title={this.props.data.name}
+            iconElementLeft={<IconButton><NavigationClose onClick={this.props.closeRecipeHandler}/></IconButton>}
+            style={appBarStyle}
+        />;
+
+        if (this.state.cookingInProgress === true) {
+            return (
+                <RecipeCooking
+                    data = {this.data}
+                    finishCookingHandler = {this.finishCookingHandler}
+                    appBar = {appBar}
+                />
+            )
+        } else {
+            return (
+                <RecipeDescription
+                    data = {this.data}
+                    startCookingHandler = {this.startCookingHandler}
+                    appBar = {appBar}
+                />
+            )
+        }
+    }
+}
+
+class RecipeCooking extends React.Component {
+    constructor(props) {
+        super(props);
+        this.secondsTotal = this.props.data.steps.reduce((a, b) => a + b.time, 0);
+        this.stepsNum = this.props.data.steps.length;
+        this.state = {
+            secondsNow: 0,
+            step: 0
+        };
+        this.handleNext = this.handleNext.bind(this);
+        this.handlePrev = this.handlePrev.bind(this);
+    }
+
+    handleNext () {
+        this.setState({
+            secondsNow: this.state.secondsNow + this.props.data.steps[this.state.step].time,
+            step: this.state.step + 1
+        });
+    }
+
+    handlePrev () {
+        this.setState({ showIngredients: false });
+        this.setState({
+            secondsNow: this.state.secondsNow - this.props.data.steps[this.state.step-1].time,
+            step: this.state.step - 1
+        });
+    }
+
+    render_progress_bar() {
+        let pct = (this.state.secondsNow / this.secondsTotal * 100) | 0;
+        let now = new Date((this.secondsTotal - this.state.secondsNow) * 1000);
+        let h = now.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+        let m = now.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+        return (
+            <div>
+                <div>{pct}% done, left {h}:{m}</div>
+                <LinearProgress mode="determinate" value={this.state.secondsNow} max={this.secondsTotal}/>
+            </div>
+        );
+    }
+
+    renderTimer() {
+        let stepData = this.props.data.steps[this.state.step];
+        let timerText = "";
+        let key = "timer_" + this.state.step;
+        if (stepData.timer === true) {
+            timerText = <Clock initialTime={stepData.time} countdown={stepData.countdown} key={key}/>;
+        }
+        return timerText;
+    }
+
+    render() {
+        let progressBar = this.render_progress_bar();
+        let nextBtn;
+        let prevBtn;
+        const btnStyle = {
+            marginRight: 20,
+        };
+        const btnPaneStyle = {
+            marginTop: 10
+        };
+        const progressBarPaneStyle = {
+            marginTop: 10
+        };
+        const timerPaneStyle = {
+            marginTop: 10
+        };
+        const textPaneStyle = {
+            marginTop: 10,
+            textAlign: "justify",
+            textIndent: "30px",
+            marginLeft: 5,
+            marginRight: 5
+        };
+        let stepData = this.props.data.steps[this.state.step];
+        let timerText = this.renderTimer();
+        let text = (
+            <div>
+                {stepData.desc}
+            </div>
+        );
+        // Generate prev button behavior
+        if (this.state.step === 0) {
+            prevBtn = <NavigationCancel onClick={this.props.finishCookingHandler}/>;
+        } else {
+            prevBtn = <NavigationArrowBack onClick={this.handlePrev}/>;
+        }
+        // Generate next button behavior
+        if (this.state.step === this.stepsNum - 1) {
+            nextBtn = <ActionDone onClick={this.props.finishCookingHandler}/>;
+        } else {
+            nextBtn = <NavigationArrowForward onClick={this.handleNext}/>;
+        }
+        return (
+            <div>
+                {this.props.appBar}
+                <div style={progressBarPaneStyle}>
+                    {progressBar}
+                </div>
+                <div style={timerPaneStyle}>
+                    {timerText}
+                </div>
+                <div style={textPaneStyle}>
+                    {text}
+                </div>
+                <div style={btnPaneStyle}>
+                    <FloatingActionButton mini={true} style={btnStyle}>{prevBtn}</FloatingActionButton>
+                    <FloatingActionButton mini={true}>{nextBtn}</FloatingActionButton>
+                </div>
+            </div>
+        );
+    }
+}
+
+class RecipeDescription extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showIngredients: false
+        };
+        this.handleOpenIngredients = this.handleOpenIngredients.bind(this);
+        this.handleCloseIngredients = this.handleCloseIngredients.bind(this);
+    }
+
+    handleOpenIngredients () {
+        this.setState({ showIngredients: true });
+    }
+
+    handleCloseIngredients () {
+        this.setState({ showIngredients: false });
+    }
+
+    ingredients_content() {
+        const listItems = this.props.data.ingredients.map((item, index) =>
+            <ListItem leftCheckbox={<Checkbox />} primaryText={item.item.concat(' - ', item.quantity, ' ', item.measure)} key={index}/>);
+        const content = (
+            <List>{listItems}</List>
+        );
+        const actions = [
+            <FlatButton
+                label="Close"
+                primary={true}
+                onClick={this.handleCloseIngredients}
+            />
+        ];
+        return (
+            <Dialog
+                title="Ingredients"
+                actions={actions}
+                modal={true}
+                open={this.state.showIngredients}
+                autoScrollBodyContent={true}
+            >
+                {content}
+            </Dialog>
+        );
+    }
+
+    render() {
+        const btnStyle = {
+            marginRight: 20,
+        };
+        const descStyle = {
+            marginTop: 10,
+            textAlign: "justify",
+            textIndent: "30px",
+            marginLeft: 5,
+            marginRight: 5
+        };
+        const buttonPaneStyle = {
+            marginTop: 10
+        };
+        return <div>
+            {this.props.appBar}
+            <div style={descStyle}>
+            {this.props.data.desc}
+            </div>
+            <div style={buttonPaneStyle}>
+                <RaisedButton label="Start Cooking" primary={true} onClick={this.props.startCookingHandler} style={btnStyle}/>
+                <RaisedButton label="Ingredients" secondary={true} onClick={this.handleOpenIngredients} />
+            </div>
+            <div>{this.ingredients_content()}</div>
+        </div>
+    }
+}
+
+export default Recipe;
