@@ -4,12 +4,34 @@ import './App.css';
 class Clock extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {date: 0, state: 0};
+
+        this.countdown = this.props.countdown === true || this.props.countdown === 'true';
+        this.state = {
+            date: this.initialValue(),
+            state: 0,
+        };
         this.btnTapped = this.btnTapped.bind(this);
     }
+    initialValue(){
+        let date = 0;
+        if (this.props.initialTime){
+            date = parseInt(this.props.initialTime, 10) * 10
+        }
+        return date;
+    }
     tick() {
+        let date;
+        if (this.countdown === true) {
+            if (this.state.date <= 1) {
+                date = 0;
+            } else {
+                date = this.state.date - 1;
+            }
+        } else {
+            date = this.state.date + 1
+        }
         this.setState({
-            date: this.state.date + 1
+            date: date
         });
     }
     btnTapped() {
@@ -31,7 +53,7 @@ class Clock extends React.Component {
         } else if (this.state.state === 2) {
             this.setState({
                 state: 0,
-                date: 0
+                date: this.initialValue()
             });
             console.log("reset timer");
         }
