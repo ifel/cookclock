@@ -42,13 +42,17 @@ class Clock extends React.Component {
 
     render() {
         let now = new Date(this.state.date * 100);
-        let h = now.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 });
-        let m = now.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 });
-        let s = now.getSeconds().toLocaleString(undefined, { minimumIntegerDigits: 2 });
-        let ms = now.getMilliseconds().toLocaleString(undefined, { minimumIntegerDigits: 3 });
+        let h = now.getHours().toLocaleString(undefined, {minimumIntegerDigits: 2});
+        let m = now.getMinutes().toLocaleString(undefined, {minimumIntegerDigits: 2});
+        let s = now.getSeconds().toLocaleString(undefined, {minimumIntegerDigits: 2});
+        let ms = now.getMilliseconds().toLocaleString(undefined, {minimumIntegerDigits: 3});
+        let headerText = "";
+        if (this.props.name) {
+            headerText = <div className="Clock-header">{this.props.name}:</div>
+        }
         return (
             <div onClick={this.btnTapped} className="Clock">
-                <div className="Clock-header">{this.props.name}:</div><div className="Clock-text">{h}:{m}:{s}.{ms}</div>
+                {headerText}<div className="Clock-text">{h}:{m}:{s}.{ms}</div>
             </div>
         );
     }
