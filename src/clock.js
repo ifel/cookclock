@@ -27,6 +27,7 @@ class Clock extends React.Component {
             if (this.state.date <= 1) {
                 date = 0;
                 this.disableNoSleep();
+                this.alarm.play();
             } else {
                 date = this.state.date - 1;
             }
@@ -91,6 +92,10 @@ class Clock extends React.Component {
         return (
             <div onClick={this.btnTapped} className="Clock">
                 {headerText}<div className="Clock-text">{h}:{m}:{s}.{ms}</div>
+                <audio ref={(alarm) => { this.alarm = alarm; }}>
+                    <source src="http://soundbible.com/grab.php?id=1819&type=mp3" type="audio/mpeg" >
+                    </source>
+                </audio>
             </div>
         );
     }
