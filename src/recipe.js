@@ -126,7 +126,8 @@ class RecipeCooking extends React.Component {
             marginRight: 20,
         };
         const btnPaneStyle = {
-            marginTop: 10
+            marginTop: 10,
+            textAlign: "center"
         };
         const progressBarPaneStyle = {
             marginTop: 10
@@ -237,7 +238,8 @@ class RecipeDescription extends React.Component {
             marginRight: 5
         };
         const buttonPaneStyle = {
-            marginTop: 10
+            marginTop: 10,
+            textAlign: "center"
         };
         return <div>
             {this.props.appBar}
