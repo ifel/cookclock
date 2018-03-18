@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import NoSleep from 'nosleep.js';
 
 class Clock extends React.Component {
     constructor(props) {
@@ -11,6 +12,7 @@ class Clock extends React.Component {
             state: 0,
         };
         this.btnTapped = this.btnTapped.bind(this);
+        this.noSleep = new NoSleep();
     }
     initialValue(){
         let date = 0;
@@ -24,6 +26,7 @@ class Clock extends React.Component {
         if (this.countdown === true) {
             if (this.state.date <= 1) {
                 date = 0;
+                this.disableNoSleep();
             } else {
                 date = this.state.date - 1;
             }
@@ -43,11 +46,13 @@ class Clock extends React.Component {
                 () => this.tick(),
                 100
             );
+            this.enableNoSleep();
             console.log("Start timer");
         } else if (this.state.state === 1) {
             this.setState({
                 state: 2
             });
+            this.disableNoSleep();
             console.log("Stop timer");
             clearInterval(this.timerID);
         } else if (this.state.state === 2) {
@@ -60,6 +65,17 @@ class Clock extends React.Component {
     }
     componentWillUnmount() {
         clearInterval(this.timerID);
+        this.disableNoSleep();
+    }
+    enableNoSleep() {
+        if (this.props.nosleep === true || this.props.nosleep === "true") {
+            this.noSleep.enable()
+        }
+    }
+    disableNoSleep() {
+        if (this.props.nosleep === true || this.props.nosleep === "true") {
+            this.noSleep.disable();
+        }
     }
 
     render() {
