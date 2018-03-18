@@ -14,6 +14,8 @@ import ActionDone from 'material-ui/svg-icons/action/done';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import ImageTimelapse from 'material-ui/svg-icons/image/timelapse';
+import Divider from 'material-ui/Divider';
 
 
 class Recipe extends React.Component {
@@ -96,13 +98,28 @@ class RecipeCooking extends React.Component {
     }
 
     render_progress_bar() {
-        let pct = (this.state.secondsNow / this.secondsTotal * 100) | 0;
         let now = new Date((this.secondsTotal - this.state.secondsNow) * 1000);
         let h = now.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 });
         let m = now.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+        const timeLeftStyle = {
+            marginRight: 10,
+            textAlign: "right",
+            verticalAlign: "middle"
+        };
+        const timeLeftTextStyle = {
+            display: "inline-block",
+            verticalAlign: "middle",
+            fontFamily: "arial",
+            fontSize: "20px"
+        };
+        const imageTimelapseStyle = {
+            verticalAlign: "middle"
+        };
         return (
             <div>
-                <div>{pct}% done, left {h}:{m}</div>
+                <div style={timeLeftStyle}>
+                    <ImageTimelapse style={imageTimelapseStyle} /> <span style={timeLeftTextStyle}>{h}:{m}</span>
+                </div>
                 <LinearProgress mode="determinate" value={this.state.secondsNow} max={this.secondsTotal}/>
             </div>
         );
@@ -133,10 +150,12 @@ class RecipeCooking extends React.Component {
             marginTop: 10
         };
         const timerPaneStyle = {
-            marginTop: 10
+            marginTop: 10,
+            textAlign: "center"
         };
         const textPaneStyle = {
             marginTop: 10,
+            marginBottom: 10,
             textAlign: "justify",
             textIndent: "30px",
             marginLeft: 5,
@@ -164,15 +183,17 @@ class RecipeCooking extends React.Component {
         return (
             <div>
                 {this.props.appBar}
-                <div style={progressBarPaneStyle}>
-                    {progressBar}
+                <div style={textPaneStyle}>
+                    {text}
                 </div>
                 <div style={timerPaneStyle}>
                     {timerText}
                 </div>
-                <div style={textPaneStyle}>
-                    {text}
+                <Divider/>
+                <div style={progressBarPaneStyle}>
+                    {progressBar}
                 </div>
+                <Divider/>
                 <div style={btnPaneStyle}>
                     <FloatingActionButton mini={true} style={btnStyle}>{prevBtn}</FloatingActionButton>
                     <FloatingActionButton mini={true}>{nextBtn}</FloatingActionButton>
