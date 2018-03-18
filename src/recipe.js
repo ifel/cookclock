@@ -140,14 +140,14 @@ class RecipeCooking extends React.Component {
         let nextBtn;
         let prevBtn;
         const btnStyle = {
-            marginRight: 20,
+            marginRight: 50,
         };
         const btnPaneStyle = {
-            marginTop: 10,
+            marginTop: 50,
             textAlign: "center"
         };
         const progressBarPaneStyle = {
-            marginTop: 10
+            marginTop: 30
         };
         const timerPaneStyle = {
             marginTop: 10,
