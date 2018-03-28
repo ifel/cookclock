@@ -16,7 +16,7 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import ImageTimelapse from 'material-ui/svg-icons/image/timelapse';
 import Divider from 'material-ui/Divider';
-
+import PropTypes from 'prop-types';
 
 class Recipe extends React.Component {
     constructor(props) {
@@ -68,6 +68,11 @@ class Recipe extends React.Component {
         }
     }
 }
+
+Recipe.propTypes = {
+    data: PropTypes.object,
+    closeRecipeHandler: PropTypes.func
+};
 
 class RecipeCooking extends React.Component {
     constructor(props) {
@@ -203,6 +208,12 @@ class RecipeCooking extends React.Component {
     }
 }
 
+RecipeCooking.propTypes = {
+    data: PropTypes.object,
+    finishCookingHandler: PropTypes.func,
+    appBar: PropTypes.element
+};
+
 class RecipeDescription extends React.Component {
     constructor(props) {
         super(props);
@@ -275,5 +286,11 @@ class RecipeDescription extends React.Component {
         </div>
     }
 }
+
+RecipeDescription.propTypes = {
+    data: PropTypes.object,
+    startCookingHandler: PropTypes.func,
+    appBar: PropTypes.element
+};
 
 export default Recipe;

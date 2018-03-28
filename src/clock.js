@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import NoSleep from 'nosleep.js';
+import PropTypes from 'prop-types';
 
 class Clock extends React.Component {
     constructor(props) {
@@ -100,5 +101,12 @@ class Clock extends React.Component {
         );
     }
 }
+
+Clock.propTypes = {
+    countdown: PropTypes.bool,
+    initialTime: PropTypes.number,
+    nosleep: PropTypes.bool,
+    name: PropTypes.string
+};
 
 export default Clock;
