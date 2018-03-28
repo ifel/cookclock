@@ -6,7 +6,7 @@ class Clock extends React.Component {
     constructor(props) {
         super(props);
 
-        this.countdown = this.props.countdown === true || this.props.countdown === 'true';
+        this.countdown = this.props.countdown === true;
         this.state = {
             date: this.initialValue(),
             state: 0,
@@ -69,12 +69,12 @@ class Clock extends React.Component {
         this.disableNoSleep();
     }
     enableNoSleep() {
-        if (this.props.nosleep === true || this.props.nosleep === "true") {
+        if (this.props.nosleep === true) {
             this.noSleep.enable()
         }
     }
     disableNoSleep() {
-        if (this.props.nosleep === true || this.props.nosleep === "true") {
+        if (this.props.nosleep === true) {
             this.noSleep.disable();
         }
     }

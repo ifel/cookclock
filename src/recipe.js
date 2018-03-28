@@ -130,7 +130,7 @@ class RecipeCooking extends React.Component {
         let timerText = "";
         let key = "timer_" + this.state.step;
         if (stepData.timer === true) {
-            timerText = <Clock initialTime={stepData.time} countdown={stepData.countdown} nosleep="true" key={key}/>;
+            timerText = <Clock initialTime={stepData.time} countdown={stepData.countdown} nosleep={true} key={key}/>;
         }
         return timerText;
     }
