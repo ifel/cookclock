@@ -104,8 +104,8 @@ class RecipeCooking extends React.Component {
 
     render_progress_bar() {
         let now = new Date((this.secondsTotal - this.state.secondsNow) * 1000);
-        let h = now.getHours().toLocaleString(undefined, { minimumIntegerDigits: 2 });
-        let m = now.getMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+        let h = now.getUTCHours().toLocaleString(undefined, { minimumIntegerDigits: 2 });
+        let m = now.getUTCMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 });
         const timeLeftStyle = {
             marginRight: 10,
             textAlign: "right",
