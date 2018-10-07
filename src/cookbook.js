@@ -9,7 +9,7 @@ class Cookbook extends React.Component {
         this.state = {
             menu: true
         };
-        this.recipies = [plovdata];
+        this.recipies = plovdata.recipes;
         this.closeRecipeHandler = this.closeRecipeHandler.bind(this);
     }
 
@@ -17,15 +17,14 @@ class Cookbook extends React.Component {
         const style = {
             textAlign: "left"
         };
-        const menuEntries = this.recipies.map((item, index) =>
+        const menuEntries = Object.keys(this.recipies).map((item, index) =>
             <ListItem
-                primaryText={item.name}
+                primaryText={this.recipies[item].name}
                 onClick={(event) => this.clickMenuHandler(index, event)}
                 style={style}
                 key={index}
             />
         );
-
         return (
             <List>
                 {menuEntries}
