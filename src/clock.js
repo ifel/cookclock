@@ -82,10 +82,10 @@ class Clock extends React.Component {
 
     render() {
         let now = new Date(this.state.date * 100);
-        let h = now.getHours().toLocaleString(undefined, {minimumIntegerDigits: 2});
-        let m = now.getMinutes().toLocaleString(undefined, {minimumIntegerDigits: 2});
-        let s = now.getSeconds().toLocaleString(undefined, {minimumIntegerDigits: 2});
-        let ms = now.getMilliseconds().toLocaleString(undefined, {minimumIntegerDigits: 3});
+        let h = now.getUTCHours().toLocaleString(undefined, {minimumIntegerDigits: 2});
+        let m = now.getUTCMinutes().toLocaleString(undefined, {minimumIntegerDigits: 2});
+        let s = now.getUTCSeconds().toLocaleString(undefined, {minimumIntegerDigits: 2});
+        let ms = now.getUTCMilliseconds().toLocaleString(undefined, {minimumIntegerDigits: 3});
         let headerText = "";
         if (this.props.name) {
             headerText = <div className="Clock-header">{this.props.name}:</div>
