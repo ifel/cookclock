@@ -1,6 +1,8 @@
 import React from "react";
 import Recipe from "./recipe";
-import {List, ListItem} from 'material-ui/List';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 import plovdata from './data/plov.json';
 
 class Cookbook extends React.Component {
@@ -19,11 +21,12 @@ class Cookbook extends React.Component {
         };
         const menuEntries = Object.keys(this.recipies).map((item, index) =>
             <ListItem
-                primaryText={this.recipies[item].name}
                 onClick={(event) => this.clickMenuHandler(index, event)}
                 style={style}
                 key={index}
-            />
+            >
+                <ListItemText primary={this.recipies[item].name} />
+            </ListItem>
         );
         return (
             <List>
@@ -51,7 +54,7 @@ class Cookbook extends React.Component {
     }
 
     render(){
-        let text = '';
+        var text;
         if (this.state.menu === true) {
             text = this.menuList();
         } else {
@@ -64,9 +67,7 @@ class Cookbook extends React.Component {
         }
 
         return (
-            <div>
-                {text}
-            </div>
+            <>{text}</>
         );
     }
 }

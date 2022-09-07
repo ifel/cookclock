@@ -1,22 +1,31 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import {List, ListItem} from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
-import LinearProgress from 'material-ui/LinearProgress';
+
+import AppBar from '@mui/material/AppBar';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import TimelapseRoundedIcon from '@mui/icons-material/TimelapseRounded';
+
 import Clock from './clock';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
-import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
-import ActionDone from 'material-ui/svg-icons/action/done';
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import ImageTimelapse from 'material-ui/svg-icons/image/timelapse';
-import Divider from 'material-ui/Divider';
 import PropTypes from 'prop-types';
+
 
 class Recipe extends React.Component {
     constructor(props) {
@@ -30,42 +39,54 @@ class Recipe extends React.Component {
     }
 
     startCookingHandler(e) {
-        e.preventDefault();
+        if (e !== undefined) {
+            e.preventDefault();
+        }
         this.setState({cookingInProgress: true})
     }
 
     finishCookingHandler(e) {
-        e.preventDefault();
+        if (e !== undefined) {
+            e.preventDefault();
+        }
         this.setState({cookingInProgress: false})
     }
 
     render() {
-        let appBarStyle = {
-            textAlign: "left"
-        };
-        let appBar = <AppBar
-            title={this.props.data.name}
-            iconElementLeft={<IconButton><NavigationClose onClick={this.props.closeRecipeHandler}/></IconButton>}
-            style={appBarStyle}
-        />;
+        var content;
 
         if (this.state.cookingInProgress === true) {
-            return (
-                <RecipeCooking
+            content = <RecipeCooking
                     data = {this.data}
                     finishCookingHandler = {this.finishCookingHandler}
-                    appBar = {appBar}
                 />
-            )
         } else {
-            return (
-                <RecipeDescription
+            content = <RecipeDescription
                     data = {this.data}
                     startCookingHandler = {this.startCookingHandler}
-                    appBar = {appBar}
                 />
-            )
         }
+        return (
+            <>
+            <AppBar position='relative' sx={{ mt: 1 }}>
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        {this.props.data.name}
+                    </Typography>
+                    <IconButton
+                        size="large"
+                        aria-label="display more actions"
+                        edge="end"
+                        color="inherit"
+                        onClick={this.props.closeRecipeHandler}
+                    >
+                        <CancelRoundedIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            {content}
+            </>
+        );
     }
 }
 
@@ -123,9 +144,9 @@ class RecipeCooking extends React.Component {
         return (
             <div>
                 <div style={timeLeftStyle}>
-                    <ImageTimelapse style={imageTimelapseStyle} /> <span style={timeLeftTextStyle}>{h}:{m}</span>
+                    <TimelapseRoundedIcon style={imageTimelapseStyle} /> <span style={timeLeftTextStyle}>{h}:{m}</span>
                 </div>
-                <LinearProgress mode="determinate" value={this.state.secondsNow} max={this.secondsTotal}/>
+                <LinearProgress variant="determinate" value={this.state.secondsNow/this.secondsTotal*100} valueBuffer={100}/>
             </div>
         );
     }
@@ -142,15 +163,7 @@ class RecipeCooking extends React.Component {
 
     render() {
         let progressBar = this.render_progress_bar();
-        let nextBtn;
-        let prevBtn;
-        const btnStyle = {
-            marginRight: 50,
-        };
-        const btnPaneStyle = {
-            marginTop: 50,
-            textAlign: "center"
-        };
+
         const progressBarPaneStyle = {
             marginTop: 30
         };
@@ -167,42 +180,40 @@ class RecipeCooking extends React.Component {
             marginRight: 5
         };
         let stepData = this.props.data.steps[this.state.step];
-        let timerText = this.renderTimer();
-        let text = (
-            <div>
-                {stepData.desc}
-            </div>
-        );
-        // Generate prev button behavior
-        if (this.state.step === 0) {
-            prevBtn = <NavigationCancel onClick={this.props.finishCookingHandler}/>;
-        } else {
-            prevBtn = <NavigationArrowBack onClick={this.handlePrev}/>;
-        }
-        // Generate next button behavior
-        if (this.state.step === this.stepsNum - 1) {
-            nextBtn = <ActionDone onClick={this.props.finishCookingHandler}/>;
-        } else {
-            nextBtn = <NavigationArrowForward onClick={this.handleNext}/>;
-        }
+
         return (
             <div>
-                {this.props.appBar}
                 <div style={textPaneStyle}>
-                    {text}
+                    {stepData.desc}
                 </div>
                 <div style={timerPaneStyle}>
-                    {timerText}
+                    {this.renderTimer()}
                 </div>
                 <Divider/>
                 <div style={progressBarPaneStyle}>
                     {progressBar}
                 </div>
                 <Divider/>
-                <div style={btnPaneStyle}>
-                    <FloatingActionButton mini={true} style={btnStyle}>{prevBtn}</FloatingActionButton>
-                    <FloatingActionButton mini={true}>{nextBtn}</FloatingActionButton>
-                </div>
+                <BottomNavigation
+                    showLabels
+                    sx={{ position: 'fixed', bottom: 0, width: 1.0 }}
+                    onChange={(event, index) => {
+                        if (index === 0){
+                            // Handle Exit
+                            this.props.finishCookingHandler();
+                        } else if (index === 1) {
+                            // Handle Prev
+                            this.handlePrev();
+                        } else {
+                            // Handle Next
+                            this.handleNext();
+                        }
+                    }}
+                    >
+                    <BottomNavigationAction label="Exit" icon={<CancelRoundedIcon/>} />
+                    <BottomNavigationAction label="Prev" disabled={this.state.step === 0} icon={<ArrowBackRoundedIcon/>} />
+                    <BottomNavigationAction label="Next" disabled={this.state.step === this.stepsNum} icon={<ArrowForwardRoundedIcon/>} />
+                </BottomNavigation>
             </div>
         );
     }
@@ -211,7 +222,6 @@ class RecipeCooking extends React.Component {
 RecipeCooking.propTypes = {
     data: PropTypes.object,
     finishCookingHandler: PropTypes.func,
-    appBar: PropTypes.element
 };
 
 class RecipeDescription extends React.Component {
@@ -234,12 +244,15 @@ class RecipeDescription extends React.Component {
 
     ingredients_content() {
         const listItems = this.props.data.ingredients.map((item, index) =>
-            <ListItem leftCheckbox={<Checkbox />} primaryText={item.item.concat(' - ', item.quantity, ' ', item.measure)} key={index}/>);
+                <ListItem secondaryAction={<Checkbox />} key={index}>
+                    <ListItemText primary={item.item.concat(' - ', item.quantity, ' ', item.measure)}/>
+                </ListItem>
+            );
         const content = (
             <List>{listItems}</List>
         );
         const actions = [
-            <FlatButton
+            <Button
                 label="Close"
                 primary={true}
                 onClick={this.handleCloseIngredients}
@@ -247,13 +260,13 @@ class RecipeDescription extends React.Component {
         ];
         return (
             <Dialog
-                title="Ingredients"
-                actions={actions}
-                modal={true}
                 open={this.state.showIngredients}
-                autoScrollBodyContent={true}
             >
-                {content}
+                <DialogTitle>Ingredients</DialogTitle>
+                <DialogContent dividers>{content}</DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleCloseIngredients}>Close</Button>
+                </DialogActions>
             </Dialog>
         );
     }
@@ -273,24 +286,24 @@ class RecipeDescription extends React.Component {
             marginTop: 10,
             textAlign: "center"
         };
-        return <div>
-            {this.props.appBar}
-            <div style={descStyle}>
-            {this.props.data.desc}
-            </div>
-            <div style={buttonPaneStyle}>
-                <RaisedButton label="Start Cooking" primary={true} onClick={this.props.startCookingHandler} style={btnStyle}/>
-                <RaisedButton label="Ingredients" secondary={true} onClick={this.handleOpenIngredients} />
-            </div>
-            <div>{this.ingredients_content()}</div>
-        </div>
+        return (
+            <>
+                <div style={descStyle}>
+                {this.props.data.desc}
+                </div>
+                <div style={buttonPaneStyle}>
+                    <Button variant="contained" onClick={this.props.startCookingHandler} style={btnStyle}>Start Cooking</Button>
+                    <Button variant="contained" onClick={this.handleOpenIngredients}>Ingredients</Button>
+                </div>
+                <div>{this.ingredients_content()}</div>
+            </>
+        )
     }
 }
 
 RecipeDescription.propTypes = {
     data: PropTypes.object,
     startCookingHandler: PropTypes.func,
-    appBar: PropTypes.element
 };
 
 export default Recipe;

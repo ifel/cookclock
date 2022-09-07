@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Clock from './clock';
-import Divider from 'material-ui/Divider';
+import Divider from '@mui/material/Divider';
 
 class MultiClock extends Component {
     render() {
